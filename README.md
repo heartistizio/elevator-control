@@ -18,6 +18,18 @@ mvn exec:java
 
 mvn test
 
+## Usage
+
+You can use the terminal ui, which offers these options:
+
+* 1. Add new Elevator
+* 2. Call a pickup
+* 3. Pick floor to go to
+* 4. Make a simulation step
+* 5. Print out status
+* 6. Quit
+* 0. Reprint menu
+
 
 ## How the system picks next floor
 
