@@ -39,7 +39,7 @@ If elevator is going up: [HigherFloors][LowerFloorsReversed]
 
 If it is going down: [LowerFloorsReversed][HigherFloors]
 
-Where HigherFloors are sorted floor destinations that are higher than current floor, and LowerFloors are sorted in reverse floor destinations that are lower than the current floor.
+Where HigherFloors are sorted floor destinations that are higher than current floor, and LowerFloorsReversed are sorted in reverse floor destinations that are lower than the current floor.
 
 ### Advantages 
 
