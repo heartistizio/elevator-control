@@ -10,7 +10,7 @@ class ElevatorSystem {
 
 
     // Calls elevator with matching direction to the provided floor
-    void pickup(Integer callingFloor, Integer direction) {
+    Integer pickup(Integer callingFloor, Integer direction) {
         Integer floorOfClosestElevator = 0;
         Integer tempFloorDifference;
         Integer idOfClosestElevator = Integer.MIN_VALUE;
@@ -48,7 +48,9 @@ class ElevatorSystem {
         // if matching elevator was found return, if implemented with time solution could use a timeout to repeat pickup request
         if (idOfClosestElevator != Integer.MIN_VALUE) {
             update(idOfClosestElevator, floorOfClosestElevator, callingFloor);
+            return 1;
         }
+        return -1;
 
     }
 
@@ -56,21 +58,25 @@ class ElevatorSystem {
     void update(Integer idOfElevator, Integer currentFloor, Integer newFloorDestination) {
         ArrayList<Integer> elevatorFloorDestinations;
         Elevator elevator = findElevatorById(idOfElevator);
-        elevator.setCurrentFloor(currentFloor);
-        elevatorFloorDestinations = elevator.getFloorDestinations();
-        elevatorFloorDestinations.add(newFloorDestination);
-        elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
+        if(elevator != null) {
+            elevator.setCurrentFloor(currentFloor);
+            elevatorFloorDestinations = elevator.getFloorDestinations();
+            elevatorFloorDestinations.add(newFloorDestination);
+            elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
 
-        if (elevator.getCurrentFloor() < elevator.getFloorDestinations().get(0)) {
-            elevator.setDirection(1);
-        } else if (elevator.getCurrentFloor() > elevator.getFloorDestinations().get(0)) {
-            elevator.setDirection(-1);
-        } else if (elevator.getFloorDestinations().isEmpty()) {
-            elevator.setDirection(0);
+            if (elevator.getCurrentFloor() < elevator.getFloorDestinations().get(0)) {
+                elevator.setDirection(1);
+            } else if (elevator.getCurrentFloor() > elevator.getFloorDestinations().get(0)) {
+                elevator.setDirection(-1);
+            } else if (elevator.getFloorDestinations().isEmpty()) {
+                elevator.setDirection(0);
+            }
+
+            this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
         }
-
-        this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
-
+        else {
+            System.out.println("There's no Elevator of that ID");
+        }
     }
 
 
@@ -146,7 +152,7 @@ class ElevatorSystem {
                 return elevator;
             }
         }
-        throw null; //should throw error instead
+        return null; //should throw error instead
     }
 
     // Determines what order should elevator visit floors

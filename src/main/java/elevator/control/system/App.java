@@ -12,6 +12,7 @@ public class App {
         System.out.println("4. Make a simulation step");
         System.out.println("5. Print out status");
         System.out.println("6. Quit");
+        System.out.println("0. Reprint menu");
     }
 
     public static void main(String[] args) {
@@ -35,9 +36,14 @@ public class App {
                     int currentFloor = reader.nextInt();
                     System.out.println("Direction(UP: 1, DOWN: -1) :");
                     int direction = reader.nextInt();
-                    elevatorSystem.pickup(currentFloor, direction);
-                    System.out.println("Elevator is coming to floor " + currentFloor);
-                    System.out.println("Awaiting next command(press 0 to print out menu again): ");
+                    int success = elevatorSystem.pickup(currentFloor, direction);
+                    if (success == 1) {
+                        System.out.println("Elevator is coming to floor " + currentFloor);
+                        System.out.println("Awaiting next command(press 0 to print out menu again): ");
+                    } else if (success == -1) {
+                        System.out.println("There's no free elevators right now.");
+                    }
+
                     break;
                 case 3:
                     System.out.println("Elevator ID:");
@@ -67,7 +73,5 @@ public class App {
             }
         }
     }
-
-
 }
-}
+
