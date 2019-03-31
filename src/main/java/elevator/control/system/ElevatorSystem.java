@@ -43,7 +43,7 @@ class ElevatorSystem {
 
             this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
         } else {
-            System.out.println("There's no Elevator of that ID");
+            System.out.println(new Strings().NO_ELEVATOR_FOUND);
         }
     }
 
@@ -71,26 +71,33 @@ class ElevatorSystem {
 
     // Could use optimization, return information on all current elevators
     String status() {
-        String newline = "\n";
-        String response = "=============" + newline;
+        Strings STRINGS = new Strings();
+        String response = STRINGS.HORIZONTAL_DELIMETER + STRINGS.NEW_LINE;
         for (Elevator elevator : this.elevatorList) {
-            response = response +
-                    "Elevator ID: " +
-                    elevator.getId().toString() +
-                    newline +
-                    "Elevator Floor: " +
-                    elevator.getCurrentFloor().toString() +
-                    newline +
-                    "Elevator Direction: " +
-                    elevator.getDirection().toString() +
-                    newline +
-                    "Elevator Destinations: " +
-                    newline;
+            response = new StringBuilder(response)
+                    .append(STRINGS.ELEVATOR_ID)
+                    .append(elevator.getId().toString())
+                    .append(STRINGS.NEW_LINE)
+                    .append(STRINGS.ELEVATOR_FLOOR)
+                    .append(elevator.getCurrentFloor().toString())
+                    .append(STRINGS.NEW_LINE)
+                    .append(STRINGS.ELEVATOR_DIRECTION)
+                    .append(elevator.getDirection().toString())
+                    .append(STRINGS.NEW_LINE)
+                    .append(STRINGS.ELEVATOR_DESTINATIONS)
+                    .append(STRINGS.NEW_LINE)
+                    .toString();
+
 
             for (Integer destination : elevator.getFloorDestinations()) {
-                response = response + destination.toString() + newline;
+                response =  new StringBuilder(response)
+                        .append(destination.toString())
+                        .append(STRINGS.NEW_LINE)
+                        .toString();
             }
-            response = response + "=============" + newline;
+            response =  new StringBuilder(response)
+                    .append(STRINGS.HORIZONTAL_DELIMETER    )
+                    .toString();
         }
         return response;
     }
