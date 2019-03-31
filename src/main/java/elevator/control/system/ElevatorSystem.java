@@ -53,10 +53,13 @@ class ElevatorSystem {
         ArrayList<Integer> elevatorFloorDestinations;
         Integer newDirection;
         for (Elevator elevator : this.elevatorList) {
-            elevatorFloorDestinations = elevator.getFloorDestinations();
             if (elevator.getDirection() != 0) {
-                elevator.setCurrentFloor(elevatorFloorDestinations.remove(0));
-                elevator.setFloorDestinations(elevatorFloorDestinations);
+                elevator.setCurrentFloor(elevator.getCurrentFloor() + elevator.getDirection());
+                if(elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))){
+                    elevatorFloorDestinations = elevator.getFloorDestinations();
+                    elevator.setCurrentFloor(elevatorFloorDestinations.remove(0));
+                    elevator.setFloorDestinations(elevatorFloorDestinations);
+                }
                 newDirection = determineDirection(elevator);
                 elevator.setDirection(newDirection);
                 this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);

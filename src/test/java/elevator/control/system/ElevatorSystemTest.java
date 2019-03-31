@@ -57,7 +57,9 @@ public class ElevatorSystemTest {
         setUp();
         elevatorSystem.update(0, 0, 8);
         elevatorSystem.update(1, 0, 3);
-        elevatorSystem.step();
+        for(int i=0; i < 8; i++) {
+            elevatorSystem.step();
+        }
         elevatorSystem.update(0, 8, 9);
         elevatorSystem.update(1, 0, 5);
         elevatorSystem.update(1, 0, 6);
@@ -66,7 +68,23 @@ public class ElevatorSystemTest {
         elevatorSystem.step();
         elevatorSystem.pickup(9, 1);
         Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection());
-        Assert.assertEquals(Integer.valueOf(9), elevator2.getFloorDestinations().get(1));
+        Assert.assertEquals(Integer.valueOf(9), elevator2.getFloorDestinations().get(2));
+        String response = elevatorSystem.status();
+        Assert.assertEquals("=============\n" +
+                "Elevator ID: 0\n" +
+                "Elevator Floor: 9\n" +
+                "Elevator Direction: -1\n" +
+                "Elevator Destinations: \n" +
+                "1\n" +
+                "=============\n" +
+                "Elevator ID: 1\n" +
+                "Elevator Floor: 1\n" +
+                "Elevator Direction: 1\n" +
+                "Elevator Destinations: \n" +
+                "5\n" +
+                "6\n" +
+                "9\n" +
+                "=============\n", response);
     }
 
     @Test
@@ -75,7 +93,9 @@ public class ElevatorSystemTest {
 
         // Person on 8th floor calls elevator intending to go down
         elevatorSystem.pickup(8, -1);
-        elevatorSystem.step();
+        for(int i=0; i < 8; i++) {
+            elevatorSystem.step();
+        }
         Assert.assertEquals(Integer.valueOf(8), elevator.getCurrentFloor()); // Elevator 1 should be on 8th floor
 
         // Person in elevator 1 presses button to go down to floor 0
@@ -96,19 +116,21 @@ public class ElevatorSystemTest {
         Assert.assertEquals(Integer.valueOf(7), elevator.getCurrentFloor()); // Elevator 1 should be on 7th floor
         Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection()); // Elevator 1 should be going down
         Assert.assertEquals(Integer.valueOf(0), elevator.getFloorDestinations().get(0)); // Elevator 1 should be going to floor 0
-        Assert.assertEquals(Integer.valueOf(2), elevator2.getCurrentFloor()); // Elevator 2 should be on 2th floor
-        Assert.assertEquals(Integer.valueOf(0), elevator2.getDirection()); // Elevator 2 should be staying still
+        Assert.assertEquals(Integer.valueOf(1), elevator2.getCurrentFloor()); // Elevator 2 should be on 1st floor
+        Assert.assertEquals(Integer.valueOf(1), elevator2.getDirection()); // Elevator 2 should be going up
 
+
+        elevatorSystem.step();
         // Person in elevator 2 presses button to go down to floor 0
         elevatorSystem.update(1, 2, 0);
         Assert.assertEquals(Integer.valueOf(0), elevator2.getFloorDestinations().get(0)); // Elevator 2 should be going to floor 0
         Assert.assertEquals(Integer.valueOf(-1), elevator2.getDirection()); // Elevator 2 should be going down
 
         elevatorSystem.step();
-        Assert.assertEquals(Integer.valueOf(0), elevator.getCurrentFloor()); // Elevator 1 should be on floor 0
-        Assert.assertEquals(Integer.valueOf(0), elevator.getDirection()); // Elevator 1 should be staying still
-        Assert.assertEquals(Integer.valueOf(0), elevator2.getCurrentFloor()); // Elevator 2 should be on floor 0
-        Assert.assertEquals(Integer.valueOf(0), elevator2.getDirection()); // Elevator 2 should be staying still
+        Assert.assertEquals(Integer.valueOf(5), elevator.getCurrentFloor()); // Elevator 1 should be on 5th floor
+        Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection()); // Elevator 1 should be going down
+        Assert.assertEquals(Integer.valueOf(1), elevator2.getCurrentFloor()); // Elevator 2 should be on 1st floor
+        Assert.assertEquals(Integer.valueOf(-1), elevator2.getDirection()); // Elevator 2 should be going down
     }
 
     @Test
@@ -116,7 +138,14 @@ public class ElevatorSystemTest {
         setUp();
         elevatorSystem.pickup(3, 1);
         elevatorSystem.step();
+        Assert.assertEquals(Integer.valueOf(1), elevator.getCurrentFloor());
+        Assert.assertEquals(Integer.valueOf(1), elevator.getDirection());
+        elevatorSystem.step();
+        Assert.assertEquals(Integer.valueOf(2), elevator.getCurrentFloor());
+        Assert.assertEquals(Integer.valueOf(1), elevator.getDirection());
+        elevatorSystem.step();
         Assert.assertEquals(Integer.valueOf(3), elevator.getCurrentFloor());
+        Assert.assertEquals(Integer.valueOf(0), elevator.getDirection());
     }
 
 
