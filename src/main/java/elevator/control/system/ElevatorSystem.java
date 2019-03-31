@@ -2,6 +2,7 @@ package elevator.control.system;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.lang.Math.abs;
 
@@ -29,9 +30,11 @@ class ElevatorSystem {
     // Adds new floor destination to provided elevator
     void update(Integer idOfElevator, Integer currentFloor, Integer newFloorDestination) {
         ArrayList<Integer> elevatorFloorDestinations;
-        Elevator elevator = findElevatorById(idOfElevator);
+        Optional<Elevator> elevatorOptional = findElevatorById(idOfElevator);
         Integer newDirection;
-        if (elevator != null) {
+        Elevator elevator;
+        if (elevatorOptional.isPresent()) {
+            elevator = elevatorOptional.get();
             elevator.setCurrentFloor(currentFloor);
             if (!elevator.getFloorDestinations().contains(newFloorDestination)) {
                 elevatorFloorDestinations = elevator.getFloorDestinations();
@@ -72,7 +75,7 @@ class ElevatorSystem {
     // Could use optimization, return information on all current elevators
     String status() {
         Strings STRINGS = new Strings();
-        String response = STRINGS.HORIZONTAL_DELIMETER + STRINGS.NEW_LINE;
+        StringBuilder response = new StringBuilder(STRINGS.HORIZONTAL_DELIMETER).append(STRINGS.NEW_LINE);
         for (Elevator elevator : this.elevatorList) {
             response = new StringBuilder(response)
                     .append(STRINGS.ELEVATOR_ID)
@@ -85,28 +88,23 @@ class ElevatorSystem {
                     .append(elevator.getDirection().toString())
                     .append(STRINGS.NEW_LINE)
                     .append(STRINGS.ELEVATOR_DESTINATIONS)
-                    .append(STRINGS.NEW_LINE)
-                    .toString();
+                    .append(STRINGS.NEW_LINE);
 
 
             for (Integer destination : elevator.getFloorDestinations()) {
                 response =  new StringBuilder(response)
                         .append(destination.toString())
-                        .append(STRINGS.NEW_LINE)
-                        .toString();
+                        .append(STRINGS.NEW_LINE);
             }
             response =  new StringBuilder(response)
-                    .append(STRINGS.HORIZONTAL_DELIMETER    )
-                    .toString();
+                    .append(STRINGS.HORIZONTAL_DELIMETER)
+                    .append(STRINGS.NEW_LINE);
         }
-        return response;
+        return response.toString();
     }
 
-/*
-    ArrayList<Elevator> status() {
-        return this.elevatorList;
-    }
-*/
+
+
 
     // Adds new Elevator to elevator list, if ID was already used returns first id that's not used
     void addNewElevator(Elevator newElevator) {
@@ -124,13 +122,13 @@ class ElevatorSystem {
     }
 
     // Finds and returns elevator by provided id
-    Elevator findElevatorById(Integer idOfElevator) {
+    Optional<Elevator> findElevatorById(Integer idOfElevator) {
         for (Elevator elevator : this.elevatorList) {
             if (elevator.getId().equals(idOfElevator)) {
-                return elevator;
+                return Optional.of(elevator);
             }
         }
-        return null; //should throw error instead
+        return Optional.empty();
     }
 
     // Determines what order should elevator visit floors

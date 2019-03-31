@@ -1,15 +1,19 @@
 package elevator.control.system;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 public class ElevatorSystemTest {
     private ElevatorSystem elevatorSystem;
     private Elevator elevator, elevator2;
 
-
-    private void setUp() {
+    @Before
+    public void setUp() {
         elevatorSystem = new ElevatorSystem();
         elevator = new Elevator();
         elevatorSystem.addNewElevator(elevator);
@@ -20,7 +24,6 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldPickup() {
-        setUp();
         elevatorSystem.pickup(3, 1);
         Assert.assertTrue(elevator.getFloorDestinations().contains(3));
         Assert.assertEquals(Integer.valueOf(1), elevator.getDirection());
@@ -28,7 +31,6 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldAddNewFloorDestination() {
-        setUp();
         elevatorSystem.update(0, 0, 3);
         Assert.assertEquals(Integer.valueOf(1), elevator.getDirection());
         Assert.assertTrue(elevator.getFloorDestinations().contains(3));
@@ -36,7 +38,6 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldReturnSimulationStatus() {
-        setUp();
         String response = elevatorSystem.status();
         Assert.assertEquals(
                 "=============\n" +
@@ -54,7 +55,6 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldCallElevatorThatsCloseToFinish(){
-        setUp();
         elevatorSystem.update(0, 0, 8); // Should add new destination to elevator of ID 0
         elevatorSystem.update(1, 0, 3); // Should add new destination to elevator of ID 1
         for(int i=0; i < 8; i++) {
@@ -87,7 +87,6 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldCheckComplicatedScenario(){
-        setUp();
 
         // Person on 8th floor calls elevator intending to go down
         elevatorSystem.pickup(8, -1);
@@ -133,7 +132,6 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldMoveSimulationByOneStepForward() {
-        setUp();
         elevatorSystem.pickup(3, 1);
         elevatorSystem.step();
         Assert.assertEquals(Integer.valueOf(1), elevator.getCurrentFloor());
@@ -149,14 +147,12 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldFindElevatorById() {
-        setUp();
-        Elevator foundElevator = elevatorSystem.findElevatorById(1);
+        Elevator foundElevator = elevatorSystem.findElevatorById(1).get();
         Assert.assertEquals(elevator2, foundElevator);
     }
 
     @Test
     public void shouldAddNewElevator() {
-        setUp();
         Elevator elevator3 = new Elevator();
         elevatorSystem.addNewElevator(elevator3);
         Assert.assertEquals(Integer.valueOf(2), elevator3.getId());
@@ -169,9 +165,18 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldAddOnlyOneDestination(){
-        setUp();
         elevatorSystem.update(0, 0, 1);
         elevatorSystem.pickup(1, 1);
         Assert.assertEquals(1, elevator.getFloorDestinations().size());
+    }
+
+    @Test
+    public void shouldUpdateNotExistentElevator(){
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+        elevatorSystem.update(2, 0, 0);
+        Assert.assertEquals("There's no Elevator of that ID\n", outContent.toString());
+        System.setOut(originalOut);
     }
 }

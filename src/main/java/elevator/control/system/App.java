@@ -1,5 +1,6 @@
 package elevator.control.system;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 
@@ -70,7 +71,8 @@ public class App {
     private static void pickFloorToGo(ElevatorSystem elevatorSystem, Scanner reader){
         System.out.println("Elevator ID:");
         int elevatorId = reader.nextInt();
-        Elevator currentElevator = elevatorSystem.findElevatorById(elevatorId);
+        Optional<Elevator> currentElevatorOptional = elevatorSystem.findElevatorById(elevatorId);
+        Elevator currentElevator = currentElevatorOptional.get();
         System.out.println("Floor Destination: ");
         int destination = reader.nextInt();
         elevatorSystem.update(elevatorId, currentElevator.getCurrentFloor(), destination);

@@ -8,21 +8,21 @@ class Elevator {
     private ArrayList<Integer> floorDestinations;
     private Integer direction; // -1 down, 0 not moving, 1 going up
 
-    Elevator(){
+    Elevator() {
         this.id = 0;
         this.currentFloor = 0;
         this.floorDestinations = new ArrayList<>();
         this.direction = 0;
     }
 
-    Elevator(Integer id, Integer currentFloor, ArrayList<Integer> floorDestinations, Integer direction){
+    Elevator(Integer id, Integer currentFloor, ArrayList<Integer> floorDestinations, Integer direction) {
         this.id = id;
         this.currentFloor = currentFloor;
         this.floorDestinations = floorDestinations;
         this.direction = direction;
     }
 
-    void set(Elevator elevator){
+    void set(Elevator elevator) {
         this.currentFloor = elevator.currentFloor;
         this.floorDestinations = elevator.floorDestinations;
         this.direction = elevator.direction;
@@ -36,7 +36,7 @@ class Elevator {
         this.id = id;
     }
 
-     Integer getCurrentFloor() {
+    Integer getCurrentFloor() {
         return currentFloor;
     }
 
