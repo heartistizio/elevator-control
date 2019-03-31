@@ -55,20 +55,19 @@ public class ElevatorSystemTest {
     @Test
     public void shouldCallElevatorThatsCloseToFinish(){
         setUp();
-        elevatorSystem.update(0, 0, 8);
-        elevatorSystem.update(1, 0, 3);
+        elevatorSystem.update(0, 0, 8); // Should add new destination to elevator of ID 0
+        elevatorSystem.update(1, 0, 3); // Should add new destination to elevator of ID 1
         for(int i=0; i < 8; i++) {
             elevatorSystem.step();
         }
-        elevatorSystem.update(0, 8, 9);
-        elevatorSystem.update(1, 0, 5);
-        elevatorSystem.update(1, 0, 6);
-        elevatorSystem.pickup(1, -1);
-        Assert.assertEquals(Integer.valueOf(1), elevator.getFloorDestinations().get(1));
+        elevatorSystem.update(0, 8, 9); // Should add new destination to elevator of ID 0 on floor 8
+        elevatorSystem.update(1, 3, 5); // Should add new destination to elevator of ID 1 on floor 3
+        elevatorSystem.pickup(1, -1);   // Should call an elevator to floor 1, and pick elevator 1
+        Assert.assertEquals(Integer.valueOf(1), elevator.getFloorDestinations().get(1)); // Second destination of elevator should be 1
         elevatorSystem.step();
-        elevatorSystem.pickup(9, 1);
-        Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection());
-        Assert.assertEquals(Integer.valueOf(9), elevator2.getFloorDestinations().get(2));
+        elevatorSystem.pickup(9, 1); // Should call elevator to floor 9 and pick elevator 2 with direction floor 1
+        Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection()); // Direction of elevator should be -1
+        Assert.assertEquals(Integer.valueOf(9), elevator2.getFloorDestinations().get(1)); //  Second destination of elevator2 should be floor 9
         String response = elevatorSystem.status();
         Assert.assertEquals("=============\n" +
                 "Elevator ID: 0\n" +
@@ -78,11 +77,10 @@ public class ElevatorSystemTest {
                 "1\n" +
                 "=============\n" +
                 "Elevator ID: 1\n" +
-                "Elevator Floor: 1\n" +
+                "Elevator Floor: 4\n" +
                 "Elevator Direction: 1\n" +
                 "Elevator Destinations: \n" +
                 "5\n" +
-                "6\n" +
                 "9\n" +
                 "=============\n", response);
     }
