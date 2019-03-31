@@ -166,4 +166,12 @@ public class ElevatorSystemTest {
         elevatorSystem.addNewElevator(elevator4);
         Assert.assertEquals(Integer.valueOf(432), elevator4.getId());
     }
+
+    @Test
+    public void shouldAddOnlyOneDestination(){
+        setUp();
+        elevatorSystem.update(0, 0, 1);
+        elevatorSystem.pickup(1, 1);
+        Assert.assertEquals(1, elevator.getFloorDestinations().size());
+    }
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.floor;
 
 class ElevatorSystem {
     private ArrayList<Elevator> elevatorList = new ArrayList<>();
@@ -34,11 +33,11 @@ class ElevatorSystem {
         Integer newDirection;
         if (elevator != null) {
             elevator.setCurrentFloor(currentFloor);
-            elevatorFloorDestinations = elevator.getFloorDestinations();
-            elevatorFloorDestinations.add(newFloorDestination);
-            elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
-
-
+            if (!elevator.getFloorDestinations().contains(newFloorDestination)) {
+                elevatorFloorDestinations = elevator.getFloorDestinations();
+                elevatorFloorDestinations.add(newFloorDestination);
+                elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
+            }
             newDirection = determineDirection(elevator);
             elevator.setDirection(newDirection);
 
@@ -56,7 +55,7 @@ class ElevatorSystem {
         for (Elevator elevator : this.elevatorList) {
             if (elevator.getDirection() != 0) {
                 elevator.setCurrentFloor(elevator.getCurrentFloor() + elevator.getDirection());
-                if(elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))){
+                if (elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))) {
                     elevatorFloorDestinations = elevator.getFloorDestinations();
                     elevator.setCurrentFloor(elevatorFloorDestinations.remove(0));
                     elevator.setFloorDestinations(elevatorFloorDestinations);
@@ -224,7 +223,7 @@ class ElevatorSystem {
             if (elevator.getFloorDestinations().size() < tripLength) {
                 tripLength = elevator.getFloorDestinations().size();
                 tempFloorDifference = abs(elevator.getCurrentFloor() - elevator.getFloorDestinations().get(tripLength - 1));
-                if(tempFloorDifference < floorDifference) {
+                if (tempFloorDifference < floorDifference) {
                     floorDifference = tempFloorDifference;
                     response[0] = elevator.getId();
                     response[1] = elevator.getCurrentFloor();
