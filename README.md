@@ -22,13 +22,13 @@ mvn test
 
 You can use the terminal ui, which offers these options:
 
-* 1 Add new Elevator
-* 2 Call a pickup
-* 3 Pick floor to go to
-* 4 Make a simulation step
-* 5 Print out status
-* 6 Quit
-* 0 Reprint menu
+* 1 - Add new Elevator
+* 2 - Call a pickup
+* 3 - Pick floor to go to
+* 4 - Make a simulation step
+* 5 - Print out status
+* 6 - Quit
+* 0 - Reprint menu
 
 
 ## How the system picks next floor
@@ -43,11 +43,9 @@ Where HigherFloors are sorted floor destinations that are higher than current fl
 
 In case that there's no elevators that are coming in the right direction or that are stationary we find the elevator that is closest to it's final destination and adds callingFloor as a last floorDestination.
 
-### Advantages 
+### Reasons for picking this system:
 
 * It is more efficient than First Come First Serve, while still preserving order by prioritising direction picked first
 * It won't get caught in the "loop" of people traveling on top floors while a person on a bottom waits for called elevator as would be possible if we always picked the closest floor as a next destination.
 
-### Disadvantages
 
-*
