@@ -41,11 +41,13 @@ If it is going down: [LowerFloorsReversed][HigherFloors]
 
 Where HigherFloors are sorted floor destinations that are higher than current floor, and LowerFloorsReversed are sorted in reverse floor destinations that are lower than the current floor.
 
+In case that there's no elevators that are coming in the right direction or that are stationary we find the elevator that is closest to it's final destination and adds callingFloor as a last floorDestination.
+
 ### Advantages 
 
 * It is more efficient than First Come First Serve, while still preserving order by prioritising direction picked first
-* It won't get caught in the "loop" of people traveling on top floors while a person on a bottom waits for called elevator
+* It won't get caught in the "loop" of people traveling on top floors while a person on a bottom waits for called elevator as would be possible if we always picked the closest floor as a next destination.
 
 ### Disadvantages
 
-* Currently if there's no elevator available with correct direction or one that's stationary no elevator will be called. In future it could be fixed by implementing timeouts, but as of now the system does not support time management.
+*
