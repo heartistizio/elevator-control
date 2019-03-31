@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.floor;
 
 class ElevatorSystem {
     private ArrayList<Elevator> elevatorList = new ArrayList<>();
@@ -217,11 +218,17 @@ class ElevatorSystem {
     private Integer[] findElevatorCloseToFinalDestination() {
         Integer[] response = new Integer[2];
         int tripLength = Integer.MAX_VALUE;
+        int floorDifference = Integer.MAX_VALUE;
+        int tempFloorDifference;
         for (Elevator elevator : this.elevatorList) {
             if (elevator.getFloorDestinations().size() < tripLength) {
                 tripLength = elevator.getFloorDestinations().size();
-                response[0] = elevator.getId();
-                response[1] = elevator.getCurrentFloor();
+                tempFloorDifference = abs(elevator.getCurrentFloor() - elevator.getFloorDestinations().get(tripLength - 1));
+                if(tempFloorDifference < floorDifference) {
+                    floorDifference = tempFloorDifference;
+                    response[0] = elevator.getId();
+                    response[1] = elevator.getCurrentFloor();
+                }
             }
         }
         return response;
