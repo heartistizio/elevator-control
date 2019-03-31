@@ -10,47 +10,19 @@ class ElevatorSystem {
 
 
     // Calls elevator with matching direction to the provided floor
-    Integer pickup(Integer callingFloor, Integer direction) {
-        Integer floorOfClosestElevator = 0;
-        Integer tempFloorDifference;
-        Integer idOfClosestElevator = Integer.MIN_VALUE;
-        Integer floorDifference = Integer.MAX_VALUE;
-        for (Elevator elevator : this.elevatorList) {
-            if (elevator.getDirection().equals(direction)) {
-                switch (direction) {
-                    case 1: {
-                        tempFloorDifference = callingFloor - elevator.getCurrentFloor();
-                        if ((abs(tempFloorDifference) < floorDifference) && tempFloorDifference > 0) {
-                            floorDifference = abs(floorDifference);
-                            floorOfClosestElevator = elevator.getCurrentFloor();
-                            idOfClosestElevator = elevator.getId();
-                        }
-                    }
-                    case -1: {
-                        tempFloorDifference = elevator.getCurrentFloor() - callingFloor;
-                        if ((abs(tempFloorDifference) < floorDifference) && tempFloorDifference > 0) {
-                            floorDifference = abs(floorDifference);
-                            floorOfClosestElevator = elevator.getCurrentFloor();
-                            idOfClosestElevator = elevator.getId();
-                        }
-                    }
-                }
-            } else if (elevator.getDirection().equals(0)) {
-                tempFloorDifference = abs(elevator.getCurrentFloor() - callingFloor);
-                if ((tempFloorDifference < floorDifference)) {
-                    floorDifference = abs(tempFloorDifference);
-                    floorOfClosestElevator = elevator.getCurrentFloor();
-                    idOfClosestElevator = elevator.getId();
-                }
-            }
-        }
+    void pickup(Integer callingFloor, Integer direction) {
+        Integer[] response;
+        response = findClosestElevatorWithMatchingDirection(callingFloor, direction);
 
         // if matching elevator was found return, if implemented with time solution could use a timeout to repeat pickup request
-        if (idOfClosestElevator != Integer.MIN_VALUE) {
-            update(idOfClosestElevator, floorOfClosestElevator, callingFloor);
-            return 1;
+        if (response[0] != null) {
+            update(response[0], response[1], callingFloor);
         }
-        return -1;
+        // else find an elevator that's about to finish it's trip
+        else {
+            response = findElevatorCloseToFinalDestination();
+            update(response[0], response[1], callingFloor);
+        }
 
     }
 
@@ -58,23 +30,19 @@ class ElevatorSystem {
     void update(Integer idOfElevator, Integer currentFloor, Integer newFloorDestination) {
         ArrayList<Integer> elevatorFloorDestinations;
         Elevator elevator = findElevatorById(idOfElevator);
-        if(elevator != null) {
+        Integer newDirection;
+        if (elevator != null) {
             elevator.setCurrentFloor(currentFloor);
             elevatorFloorDestinations = elevator.getFloorDestinations();
             elevatorFloorDestinations.add(newFloorDestination);
             elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
 
-            if (elevator.getCurrentFloor() < elevator.getFloorDestinations().get(0)) {
-                elevator.setDirection(1);
-            } else if (elevator.getCurrentFloor() > elevator.getFloorDestinations().get(0)) {
-                elevator.setDirection(-1);
-            } else if (elevator.getFloorDestinations().isEmpty()) {
-                elevator.setDirection(0);
-            }
+
+            newDirection = determineDirection(elevator);
+            elevator.setDirection(newDirection);
 
             this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
-        }
-        else {
+        } else {
             System.out.println("There's no Elevator of that ID");
         }
     }
@@ -83,14 +51,14 @@ class ElevatorSystem {
     // Moves simulation one step forward
     void step() {
         ArrayList<Integer> elevatorFloorDestinations;
+        Integer newDirection;
         for (Elevator elevator : this.elevatorList) {
             elevatorFloorDestinations = elevator.getFloorDestinations();
             if (elevator.getDirection() != 0) {
                 elevator.setCurrentFloor(elevatorFloorDestinations.remove(0));
                 elevator.setFloorDestinations(elevatorFloorDestinations);
-                if (elevator.getFloorDestinations().isEmpty()) {
-                    elevator.setDirection(0);
-                }
+                newDirection = determineDirection(elevator);
+                elevator.setDirection(newDirection);
                 this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
             }
 
@@ -206,4 +174,66 @@ class ElevatorSystem {
         return -1;
     }
 
+    private Integer[] findClosestElevatorWithMatchingDirection(Integer callingFloor, Integer direction) {
+        Integer tempFloorDifference;
+        Integer floorDifference = Integer.MAX_VALUE;
+        Integer[] response = new Integer[2];
+        for (Elevator elevator : this.elevatorList) {
+            if (elevator.getDirection().equals(direction)) {
+                switch (direction) {
+                    case 1: {
+                        tempFloorDifference = callingFloor - elevator.getCurrentFloor();
+                        if ((abs(tempFloorDifference) < floorDifference) && tempFloorDifference > 0) {
+                            floorDifference = abs(floorDifference);
+                            response[0] = elevator.getId();
+                            response[1] = elevator.getCurrentFloor();
+                        }
+                    }
+                    case -1: {
+                        tempFloorDifference = elevator.getCurrentFloor() - callingFloor;
+                        if ((abs(tempFloorDifference) < floorDifference) && tempFloorDifference > 0) {
+                            floorDifference = abs(floorDifference);
+                            response[0] = elevator.getId();
+                            response[1] = elevator.getCurrentFloor();
+                        }
+                    }
+                }
+            } else if (elevator.getDirection().equals(0)) {
+                tempFloorDifference = abs(elevator.getCurrentFloor() - callingFloor);
+                if ((tempFloorDifference < floorDifference)) {
+                    floorDifference = abs(tempFloorDifference);
+                    response[0] = elevator.getId();
+                    response[1] = elevator.getCurrentFloor();
+                }
+            }
+        }
+
+        return response;
+    }
+
+    private Integer[] findElevatorCloseToFinalDestination() {
+        Integer[] response = new Integer[2];
+        int tripLength = Integer.MAX_VALUE;
+        for (Elevator elevator : this.elevatorList) {
+            if (elevator.getFloorDestinations().size() < tripLength) {
+                tripLength = elevator.getFloorDestinations().size();
+                response[0] = elevator.getId();
+                response[1] = elevator.getCurrentFloor();
+            }
+        }
+        return response;
+    }
+
+
+    private Integer determineDirection(Elevator elevator) {
+        if (elevator.getFloorDestinations().isEmpty()) {
+            return 0;
+        } else if (elevator.getCurrentFloor() < elevator.getFloorDestinations().get(0)) {
+            return 1;
+        } else if (elevator.getCurrentFloor() > elevator.getFloorDestinations().get(0)) {
+            return -1;
+        } else
+            return null;
+    }
 }
+

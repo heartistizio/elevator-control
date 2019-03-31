@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.junit.Assert;
 
 public class ElevatorSystemTest {
-    protected ElevatorSystem elevatorSystem;
-    protected Elevator elevator, elevator2;
+    private ElevatorSystem elevatorSystem;
+    private Elevator elevator, elevator2;
 
 
-    protected void setUp() {
+    private void setUp() {
         elevatorSystem = new ElevatorSystem();
         elevator = new Elevator();
         elevatorSystem.addNewElevator(elevator);
@@ -50,6 +50,23 @@ public class ElevatorSystemTest {
                 "Elevator Direction: 0\n" +
                 "Elevator Destinations: \n" +
                 "=============\n", response);
+    }
+
+    @Test
+    public void shouldCallElevatorThatsCloseToFinish(){
+        setUp();
+        elevatorSystem.update(0, 0, 8);
+        elevatorSystem.update(1, 0, 3);
+        elevatorSystem.step();
+        elevatorSystem.update(0, 8, 9);
+        elevatorSystem.update(1, 0, 5);
+        elevatorSystem.update(1, 0, 6);
+        elevatorSystem.pickup(1, -1);
+        Assert.assertEquals(Integer.valueOf(1), elevator.getFloorDestinations().get(1));
+        elevatorSystem.step();
+        elevatorSystem.pickup(9, 1);
+        Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection());
+        Assert.assertEquals(Integer.valueOf(9), elevator2.getFloorDestinations().get(1));
     }
 
     @Test
