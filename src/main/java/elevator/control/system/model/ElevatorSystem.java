@@ -1,4 +1,7 @@
-package elevator.control.system;
+package elevator.control.system.model;
+
+import com.google.gson.Gson;
+import elevator.control.system.services.Strings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,12 +9,12 @@ import java.util.Optional;
 
 import static java.lang.Math.abs;
 
-class ElevatorSystem {
+public class ElevatorSystem {
     private ArrayList<Elevator> elevatorList = new ArrayList<>();
 
 
     // Calls elevator with matching direction to the provided floor
-    void pickup(Integer callingFloor, Integer direction) {
+    public void pickup(Integer callingFloor, Integer direction) {
         Integer[] response;
         response = findClosestElevatorWithMatchingDirection(callingFloor, direction);
 
@@ -28,7 +31,7 @@ class ElevatorSystem {
     }
 
     // Adds new floor destination to provided elevator
-    void update(Integer idOfElevator, Integer currentFloor, Integer newFloorDestination) {
+    public void update(Integer idOfElevator, Integer currentFloor, Integer newFloorDestination) {
         ArrayList<Integer> elevatorFloorDestinations;
         Optional<Elevator> elevatorOptional = findElevatorById(idOfElevator);
         Integer newDirection;
@@ -52,7 +55,7 @@ class ElevatorSystem {
 
 
     // Moves simulation one step forward
-    void step() {
+    public void step() {
         ArrayList<Integer> elevatorFloorDestinations;
         Integer newDirection;
         for (Elevator elevator : this.elevatorList) {
@@ -73,7 +76,7 @@ class ElevatorSystem {
 
 
     // Could use optimization, return information on all current elevators
-    String printStatus() {
+    public String printStatus() {
         StringBuilder response = new StringBuilder(Strings.HORIZONTAL_DELIMETER).append(Strings.NEW_LINE);
         for (Elevator elevator : this.elevatorList) {
             response = new StringBuilder(response)
@@ -102,9 +105,14 @@ class ElevatorSystem {
         return response.toString();
     }
 
+    public String status(){
+        Gson gson = new Gson();
+        return gson.toJson(this.elevatorList);
+    }
+
 
     // Adds new Elevator to elevator list, if ID was already used returns first id that's not used
-    void addNewElevator(Elevator newElevator) {
+    public void addNewElevator(Elevator newElevator) {
         Integer id;
         if (!this.elevatorList.isEmpty()) {
             for (Elevator elevator : this.elevatorList) {
@@ -119,7 +127,7 @@ class ElevatorSystem {
     }
 
     // Finds and returns elevator by provided id
-    Optional<Elevator> findElevatorById(Integer idOfElevator) {
+    public Optional<Elevator> findElevatorById(Integer idOfElevator) {
         for (Elevator elevator : this.elevatorList) {
             if (elevator.getId().equals(idOfElevator)) {
                 return Optional.of(elevator);
@@ -178,7 +186,7 @@ class ElevatorSystem {
         }
         return -1;
     }
-
+//TO DO- FIGHT with NullPointerException
     private Integer[] findClosestElevatorWithMatchingDirection(Integer callingFloor, Integer direction) {
         Integer tempFloorDifference;
         Integer floorDifference = Integer.MAX_VALUE;

@@ -1,13 +1,14 @@
 package elevator.control.system;
 
 
+import elevator.control.system.model.Elevator;
+import elevator.control.system.model.ElevatorSystem;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 
 public class ElevatorSystemTest {
     private ElevatorSystem elevatorSystem;
