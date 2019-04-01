@@ -7,6 +7,7 @@ import org.junit.Assert;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 public class ElevatorSystemTest {
     private ElevatorSystem elevatorSystem;
@@ -38,7 +39,7 @@ public class ElevatorSystemTest {
 
     @Test
     public void shouldReturnSimulationStatus() {
-        String response = elevatorSystem.status();
+        String response = elevatorSystem.printStatus();
         Assert.assertEquals(
                 "=============\n" +
                 "Elevator ID: 0\n" +
@@ -68,7 +69,7 @@ public class ElevatorSystemTest {
         elevatorSystem.pickup(9, 1); // Should call elevator to floor 9 and pick elevator 2 with direction floor 1
         Assert.assertEquals(Integer.valueOf(-1), elevator.getDirection()); // Direction of elevator should be -1
         Assert.assertEquals(Integer.valueOf(9), elevator2.getFloorDestinations().get(1)); //  Second destination of elevator2 should be floor 9
-        String response = elevatorSystem.status();
+        String response = elevatorSystem.printStatus();
         Assert.assertEquals("=============\n" +
                 "Elevator ID: 0\n" +
                 "Elevator Floor: 9\n" +
@@ -179,4 +180,5 @@ public class ElevatorSystemTest {
         Assert.assertEquals("There's no Elevator of that ID\n", outContent.toString());
         System.setOut(originalOut);
     }
+
 }

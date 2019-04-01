@@ -46,7 +46,7 @@ public class App {
         System.out.println("2. Call a pickup");
         System.out.println("3. Pick floor to go to");
         System.out.println("4. Make a simulation step");
-        System.out.println("5. Print out status");
+        System.out.println("5. Print out printStatus");
         System.out.println("6. Quit");
         System.out.println("0. Reprint menu");
     }
@@ -87,8 +87,8 @@ public class App {
     }
 
     private static void printStatus(ElevatorSystem elevatorSystem){
-        elevatorSystem.status();
-        System.out.println(elevatorSystem.status());
+        elevatorSystem.printStatus();
+        System.out.println(elevatorSystem.printStatus());
         System.out.println("Awaiting next command(press 0 to print out menu again): ");
     }
 }

@@ -46,7 +46,7 @@ class ElevatorSystem {
 
             this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
         } else {
-            System.out.println(new Strings().NO_ELEVATOR_FOUND);
+            System.out.println(Strings.NO_ELEVATOR_FOUND);
         }
     }
 
@@ -73,37 +73,34 @@ class ElevatorSystem {
 
 
     // Could use optimization, return information on all current elevators
-    String status() {
-        Strings STRINGS = new Strings();
-        StringBuilder response = new StringBuilder(STRINGS.HORIZONTAL_DELIMETER).append(STRINGS.NEW_LINE);
+    String printStatus() {
+        StringBuilder response = new StringBuilder(Strings.HORIZONTAL_DELIMETER).append(Strings.NEW_LINE);
         for (Elevator elevator : this.elevatorList) {
             response = new StringBuilder(response)
-                    .append(STRINGS.ELEVATOR_ID)
+                    .append(Strings.ELEVATOR_ID)
                     .append(elevator.getId().toString())
-                    .append(STRINGS.NEW_LINE)
-                    .append(STRINGS.ELEVATOR_FLOOR)
+                    .append(Strings.NEW_LINE)
+                    .append(Strings.ELEVATOR_FLOOR)
                     .append(elevator.getCurrentFloor().toString())
-                    .append(STRINGS.NEW_LINE)
-                    .append(STRINGS.ELEVATOR_DIRECTION)
+                    .append(Strings.NEW_LINE)
+                    .append(Strings.ELEVATOR_DIRECTION)
                     .append(elevator.getDirection().toString())
-                    .append(STRINGS.NEW_LINE)
-                    .append(STRINGS.ELEVATOR_DESTINATIONS)
-                    .append(STRINGS.NEW_LINE);
+                    .append(Strings.NEW_LINE)
+                    .append(Strings.ELEVATOR_DESTINATIONS)
+                    .append(Strings.NEW_LINE);
 
 
             for (Integer destination : elevator.getFloorDestinations()) {
-                response =  new StringBuilder(response)
+                response = new StringBuilder(response)
                         .append(destination.toString())
-                        .append(STRINGS.NEW_LINE);
+                        .append(Strings.NEW_LINE);
             }
-            response =  new StringBuilder(response)
-                    .append(STRINGS.HORIZONTAL_DELIMETER)
-                    .append(STRINGS.NEW_LINE);
+            response = new StringBuilder(response)
+                    .append(Strings.HORIZONTAL_DELIMETER)
+                    .append(Strings.NEW_LINE);
         }
         return response.toString();
     }
-
-
 
 
     // Adds new Elevator to elevator list, if ID was already used returns first id that's not used
