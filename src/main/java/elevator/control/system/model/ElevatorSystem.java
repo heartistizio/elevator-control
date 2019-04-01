@@ -34,7 +34,7 @@ public class ElevatorSystem {
     public void update(Integer idOfElevator, Integer currentFloor, Integer newFloorDestination) {
         ArrayList<Integer> elevatorFloorDestinations;
         Optional<Elevator> elevatorOptional = findElevatorById(idOfElevator);
-        Integer newDirection;
+        Optional<Integer> newDirection;
         Elevator elevator;
         if (elevatorOptional.isPresent()) {
             elevator = elevatorOptional.get();
@@ -45,7 +45,8 @@ public class ElevatorSystem {
                 elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
             }
             newDirection = determineDirection(elevator);
-            elevator.setDirection(newDirection);
+            newDirection.ifPresent(direction -> elevator.setDirection(direction));
+
 
             this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
         } else {
@@ -57,7 +58,7 @@ public class ElevatorSystem {
     // Moves simulation one step forward
     public void step() {
         ArrayList<Integer> elevatorFloorDestinations;
-        Integer newDirection;
+        Optional<Integer> newDirection;
         for (Elevator elevator : this.elevatorList) {
             if (elevator.getDirection() != 0) {
                 elevator.setCurrentFloor(elevator.getCurrentFloor() + elevator.getDirection());
@@ -67,7 +68,8 @@ public class ElevatorSystem {
                     elevator.setFloorDestinations(elevatorFloorDestinations);
                 }
                 newDirection = determineDirection(elevator);
-                elevator.setDirection(newDirection);
+                newDirection.ifPresent(direction -> elevator.setDirection(direction));
+                }
                 this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
             }
 
@@ -186,7 +188,7 @@ public class ElevatorSystem {
         }
         return -1;
     }
-//TO DO- FIGHT with NullPointerException
+
     private Integer[] findClosestElevatorWithMatchingDirection(Integer callingFloor, Integer direction) {
         Integer tempFloorDifference;
         Integer floorDifference = Integer.MAX_VALUE;
@@ -244,15 +246,15 @@ public class ElevatorSystem {
     }
 
 
-    private Integer determineDirection(Elevator elevator) {
+    private Optional<Integer> determineDirection(Elevator elevator) {
         if (elevator.getFloorDestinations().isEmpty()) {
-            return 0;
+            return Optional.of(0);
         } else if (elevator.getCurrentFloor() < elevator.getFloorDestinations().get(0)) {
-            return 1;
+            return Optional.of(1);
         } else if (elevator.getCurrentFloor() > elevator.getFloorDestinations().get(0)) {
-            return -1;
+            return Optional.of(-1);
         } else
-            return null;
+            return Optional.empty();
     }
 }
 
