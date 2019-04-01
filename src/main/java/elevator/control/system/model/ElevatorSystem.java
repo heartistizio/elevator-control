@@ -69,7 +69,6 @@ public class ElevatorSystem {
                 }
                 newDirection = determineDirection(elevator);
                 newDirection.ifPresent(direction -> elevator.setDirection(direction));
-                }
                 this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
             }
 
