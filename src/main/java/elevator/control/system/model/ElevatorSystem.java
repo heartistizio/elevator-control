@@ -47,8 +47,6 @@ public class ElevatorSystem {
             newDirection = determineDirection(elevator);
             if(newDirection.isPresent())
                 elevator.setDirection(newDirection.get());
-
-
             this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
         } else {
             System.out.println(Strings.NO_ELEVATOR_FOUND);
@@ -58,18 +56,18 @@ public class ElevatorSystem {
 
     // Moves simulation one step forward
     public void step() {
-        ArrayList<Integer> elevatorFloorDestinations;
         Optional<Integer> newDirection;
         for (Elevator elevator : this.elevatorList) {
                 elevator.setCurrentFloor(elevator.getCurrentFloor() + elevator.getDirection());
-                if (elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))) {
-                    elevator = removeFloorDestination(elevator);
+                if(!elevator.getFloorDestinations().isEmpty()) {
+                    if (elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))) {
+                        elevator.set(removeFloorDestination(elevator));
+                    }
+                    newDirection = determineDirection(elevator);
+                    if (newDirection.isPresent())
+                        elevator.setDirection(newDirection.get());
+                    this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
                 }
-                newDirection = determineDirection(elevator);
-                if(newDirection.isPresent())
-                    elevator.setDirection(newDirection.get());
-                this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
-
         }
     }
 
