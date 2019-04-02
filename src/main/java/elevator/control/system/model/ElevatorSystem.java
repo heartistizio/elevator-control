@@ -106,7 +106,7 @@ public class ElevatorSystem {
         return response.toString();
     }
 
-    public String status(){
+    public String status() {
         Gson gson = new Gson();
         return gson.toJson(this.elevatorList);
     }
@@ -252,6 +252,8 @@ public class ElevatorSystem {
             return Optional.of(1);
         } else if (elevator.getCurrentFloor() > elevator.getFloorDestinations().get(0)) {
             return Optional.of(-1);
+        } else if (elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))) {
+            return Optional.of(elevator.getDirection());
         } else
             return Optional.empty();
     }
