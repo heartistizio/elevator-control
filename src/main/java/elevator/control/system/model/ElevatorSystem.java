@@ -45,7 +45,8 @@ public class ElevatorSystem {
                 elevator.setFloorDestinations(determineFinalFloorDestinations(elevator, currentFloor, elevatorFloorDestinations));
             }
             newDirection = determineDirection(elevator);
-            newDirection.ifPresent(direction -> elevator.setDirection(direction));
+            if(newDirection.isPresent())
+                elevator.setDirection(newDirection.get());
 
 
             this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
@@ -60,17 +61,14 @@ public class ElevatorSystem {
         ArrayList<Integer> elevatorFloorDestinations;
         Optional<Integer> newDirection;
         for (Elevator elevator : this.elevatorList) {
-            if (elevator.getDirection() != 0) {
                 elevator.setCurrentFloor(elevator.getCurrentFloor() + elevator.getDirection());
                 if (elevator.getCurrentFloor().equals(elevator.getFloorDestinations().get(0))) {
-                    elevatorFloorDestinations = elevator.getFloorDestinations();
-                    elevator.setCurrentFloor(elevatorFloorDestinations.remove(0));
-                    elevator.setFloorDestinations(elevatorFloorDestinations);
+                    elevator = removeFloorDestination(elevator);
                 }
                 newDirection = determineDirection(elevator);
-                newDirection.ifPresent(direction -> elevator.setDirection(direction));
+                if(newDirection.isPresent())
+                    elevator.setDirection(newDirection.get());
                 this.elevatorList.get(findIndexOfElevator(elevator)).set(elevator);
-            }
 
         }
     }
@@ -256,6 +254,13 @@ public class ElevatorSystem {
             return Optional.of(elevator.getDirection());
         } else
             return Optional.empty();
+    }
+
+    private Elevator removeFloorDestination(Elevator elevator){
+            ArrayList<Integer> elevatorFloorDestinations = elevator.getFloorDestinations();
+            elevator.setCurrentFloor(elevatorFloorDestinations.remove(0));
+            elevator.setFloorDestinations(elevatorFloorDestinations);
+            return elevator;
     }
 }
 
