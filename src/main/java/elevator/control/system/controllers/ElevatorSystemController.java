@@ -9,10 +9,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ElevatorSystemController {
 
+    @GetMapping(value = "/reset")
+    public void reset() {
+        App.startUp();
+    }
+
     @GetMapping(value = "/elevators")
     public String getElevators() {
         return App.elevatorSystem.status();
     }
+
 
     @GetMapping(value = "/step")
     public String getStep() {

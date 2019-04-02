@@ -9,12 +9,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class App {
 
-    public final static ElevatorSystem elevatorSystem = new ElevatorSystem();
+    public static ElevatorSystem elevatorSystem;
 
-    public static void main(String[] args) {
+    public static void startUp(){
+        elevatorSystem = new ElevatorSystem();
         for(int i = 0; i < 4; i++){
             elevatorSystem.addNewElevator(new Elevator());
         }
+    }
+
+
+    public static void main(String[] args) {
+        startUp();
         SpringApplication.run(App.class, args);
     }
 }
